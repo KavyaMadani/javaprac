@@ -1,65 +1,38 @@
-import java.util.Scanner;
-
 public class MiniBank {
-
-    record BankInfo(String name, String branch) {
-    }
-
-    enum MenuOption {
-        OPEN_ACCOUNT,
-        DEPOSIT,
-        WITHDRAW,
-        TRANSFER,
-        EXIT
-    }
 
     public static void main(String[] args) {
 
-        Scanner sc = new Scanner(System.in);
+        Account[] accounts = new Account[3];
 
-        BankInfo bank = new BankInfo("MiniBank", "Main Branch");
+        accounts[0] = new Account("Kavya", 1000);
+        accounts[1] = new Account("Rahul", 2000);
+        accounts[2] = new Account("Priya");
 
-        System.out.println("================================");
-        System.out.println(bank);
-        System.out.println("================================");
+        // Deposits
+        accounts[0].deposit(500);
+        accounts[1].deposit(1000);
+        accounts[2].deposit(1500);
 
-        boolean running = true;
+        // Withdrawals
+        accounts[0].withdraw(200);
+        accounts[1].withdraw(500);
+        accounts[2].withdraw(300);
 
-        while (running) {
+        // Print account details
+        for (Account account : accounts) {
 
-            System.out.println("\n===== MiniBank Menu =====");
-            System.out.println("1. Open Account");
-            System.out.println("2. Deposit");
-            System.out.println("3. Withdraw");
-            System.out.println("4. Transfer");
-            System.out.println("5. Exit");
+            System.out.println("-------------------------");
+            System.out.println("Account Number: "
+                    + account.getAccountNumber());
 
-            System.out.print("Enter your choice: ");
-            int choice = sc.nextInt();
+            System.out.println("Owner: "
+                    + account.getOwnerName());
 
-            String result = switch (choice) {
+            System.out.println("Balance: ₹"
+                    + account.getBalance());
 
-                case 1 -> "Open Account — to be implemented in a later lab";
-
-                case 2 -> "Deposit — to be implemented in a later lab";
-
-                case 3 -> "Withdraw — to be implemented in a later lab";
-
-                case 4 -> "Transfer — to be implemented in a later lab";
-
-                case 5 -> {
-                    running = false;
-                    yield "Exit selected";
-                }
-
-                default -> "Invalid choice";
-            };
-
-            System.out.println(result);
+            System.out.println("Active: "
+                    + account.isActive());
         }
-
-        System.out.println("Thank you for using MiniBank!");
-
-        sc.close();
     }
 }

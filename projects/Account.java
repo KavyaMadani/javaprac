@@ -1,70 +1,45 @@
+import java.util.Objects;
+
 public class Account {
-
-    private final String accountNumber;
+    private String accountNumber;
     private String ownerName;
-    private long balance;
-    private boolean active;
+    private double balance;
 
-    private static long accountCounter = 0;
-
-    private static String generateAccountNumber() {
-        accountCounter++;
-        return String.format("AC%04d", accountCounter);
-    }
-
-    // Constructor with owner name and opening balance
-    public Account(String ownerName, long openingBalance) {
-
-        this.accountNumber = generateAccountNumber();
+    // Constructor
+    public Account(String accountNumber, String ownerName, double balance) {
+        this.accountNumber = accountNumber;
         this.ownerName = ownerName;
-        this.balance = openingBalance;
-        this.active = true;
+        this.balance = balance;
     }
 
-    // Constructor with only owner name
-    public Account(String ownerName) {
-
-        this(ownerName, 0);
+    // toString()
+    @Override
+    public String toString() {
+        return "Account Number: " + accountNumber
+                + ", Owner Name: " + ownerName
+                + ", Balance: " + balance;
     }
 
-    // Deposit money
-    public void deposit(long amount) {
+    // equals()
+    @Override
+    public boolean equals(Object o) {
 
-        if (amount < 0) {
-            return;
-        }
-
-        balance = balance + amount;
-    }
-
-    // Withdraw money
-    public boolean withdraw(long amount) {
-
-        if (amount < 0) {
-            return false;
-        }
-
-        if (balance >= amount) {
-            balance = balance - amount;
+        if (this == o) {
             return true;
         }
 
-        return false;
+        if (!(o instanceof Account)) {
+            return false;
+        }
+
+        Account a = (Account) o;
+
+        return accountNumber.equals(a.accountNumber);
     }
 
-    public String getAccountNumber() {
-        return accountNumber;
-    }
-
-    public String getOwnerName() {
-        return ownerName;
-    }
-
-    public long getBalance() {
-        return balance;
-    }
-
-    public boolean isActive() {
-        return active;
+    // hashCode()
+    @Override
+    public int hashCode() {
+        return Objects.hash(accountNumber);
     }
 }

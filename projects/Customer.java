@@ -1,40 +1,59 @@
-public class Customer {
+public class Customer implements Cloneable {
 
     private String name;
     private String email;
     private String mobile;
+    private Address address;
 
-    private final String customerId;
-
-    private static long customerCounter = 100;
-
-    private static String generateCustomerId() {
-        customerCounter++;
-        return "CUST" + customerCounter;
-    }
-
-    public Customer(String name, String email, String mobile) {
-
+    // Constructor
+    public Customer(String name, String email, String mobile, Address address) {
         this.name = name;
         this.email = email;
         this.mobile = mobile;
-
-        this.customerId = generateCustomerId();
+        this.address = address;
     }
 
-    public String getName() {
-        return name;
+    // Nested Address class
+    public static class Address {
+
+        private String line;
+        private String city;
+        private String pincode;
+
+        // Constructor
+        public Address(String line, String city, String pincode) {
+            this.line = line;
+            this.city = city;
+            this.pincode = pincode;
+        }
+
+        // Getters
+        public String getLine() {
+            return line;
+        }
+
+        public String getCity() {
+            return city;
+        }
+
+        public String getPincode() {
+            return pincode;
+        }
     }
 
-    public String getEmail() {
-        return email;
+    // getAddress()
+    public Address getAddress() {
+        return address;
     }
 
-    public String getMobile() {
-        return mobile;
-    }
+    // clone()
+    @Override
+    public Customer clone() {
 
-    public String getCustomerId() {
-        return customerId;
+        try {
+            return (Customer) super.clone();
+        } catch (CloneNotSupportedException e) {
+            throw new RuntimeException(e);
+        }
     }
 }
