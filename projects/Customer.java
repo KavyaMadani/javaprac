@@ -5,7 +5,7 @@ public class Customer implements Cloneable {
     private String mobile;
     private Address address;
 
-    // Constructor
+    
     public Customer(String name, String email, String mobile, Address address) {
         this.name = name;
         this.email = email;
@@ -13,21 +13,21 @@ public class Customer implements Cloneable {
         this.address = address;
     }
 
-    // Nested Address class
+    
     public static class Address {
 
         private String line;
         private String city;
         private String pincode;
 
-        // Constructor
+        
         public Address(String line, String city, String pincode) {
             this.line = line;
             this.city = city;
             this.pincode = pincode;
         }
 
-        // Getters
+        
         public String getLine() {
             return line;
         }
@@ -41,12 +41,12 @@ public class Customer implements Cloneable {
         }
     }
 
-    // getAddress()
+    
     public Address getAddress() {
         return address;
     }
 
-    // clone()
+   
     @Override
     public Customer clone() {
 

@@ -1,38 +1,65 @@
+import java.util.*;
+import exception.*;
+
 public class MiniBank {
 
-    public static void main(String[] args) {
+    private Map<String, Account> accounts =
+            new HashMap<>();
 
-        Account[] accounts = new Account[3];
+    public void addAccount(Account account) {
 
-        accounts[0] = new Account("Kavya", 1000);
-        accounts[1] = new Account("Rahul", 2000);
-        accounts[2] = new Account("Priya");
+        accounts.put(
+                account.getAccountNumber(),
+                account
+        );
 
-        // Deposits
-        accounts[0].deposit(500);
-        accounts[1].deposit(1000);
-        accounts[2].deposit(1500);
+        System.out.println(
+                "Account added successfully."
+        );
+    }
 
-        // Withdrawals
-        accounts[0].withdraw(200);
-        accounts[1].withdraw(500);
-        accounts[2].withdraw(300);
+    public Account findAccount(String accountNumber)
+            throws AccountNotFoundException {
 
-        // Print account details
-        for (Account account : accounts) {
+        Account account = accounts.get(accountNumber);
 
-            System.out.println("-------------------------");
-            System.out.println("Account Number: "
-                    + account.getAccountNumber());
+        if (account == null) {
 
-            System.out.println("Owner: "
-                    + account.getOwnerName());
+            throw new AccountNotFoundException(
+                    "Account not found: "
+                    + accountNumber
+            );
+        }
 
-            System.out.println("Balance: ₹"
-                    + account.getBalance());
+        return account;
+    }
 
-            System.out.println("Active: "
-                    + account.isActive());
+    public void transfer(
+            Account from,
+            Account to,
+            long amount)
+            throws BankException {
+
+        try {
+
+            from.withdraw(amount);
+
+            to.deposit(amount);
+
+            System.out.println(
+                    "Transfer successful."
+            );
+
+        } catch (InvalidAmountException |
+                 InsufficientFundsException e) {
+
+            throw e;
+
+        } finally {
+
+            System.out.println(
+                    "Transfer operation completed."
+            );
         }
     }
 }
