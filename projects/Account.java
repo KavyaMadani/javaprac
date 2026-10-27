@@ -1,16 +1,16 @@
+
+import java.io.Serializable;
 import exception.*;
 
-public class Account {
+public class Account implements Serializable {
+
+    private static final long serialVersionUID = 1L;
 
     private String accountNumber;
     private String name;
     private long balance;
 
-    public Account(
-            String accountNumber,
-            String name,
-            long balance) {
-
+    public Account(String accountNumber, String name, long balance) {
         this.accountNumber = accountNumber;
         this.name = name;
         this.balance = balance;
@@ -28,20 +28,15 @@ public class Account {
         return balance;
     }
 
-    public void deposit(long amount)
-            throws InvalidAmountException {
-
+    public void deposit(long amount) throws InvalidAmountException {
         if (amount <= 0) {
             throw new InvalidAmountException(
-                    "Deposit amount must be greater than zero."
+                "Deposit amount must be greater than zero."
             );
         }
 
         balance += amount;
-
-        System.out.println(
-                "Deposited: " + amount
-        );
+        System.out.println("Deposited: " + amount);
     }
 
     public void withdraw(long amount)
@@ -50,39 +45,25 @@ public class Account {
 
         if (amount <= 0) {
             throw new InvalidAmountException(
-                    "Withdrawal amount must be greater than zero."
+                "Withdrawal amount must be greater than zero."
             );
         }
 
         if (amount > balance) {
-
             long shortfall = amount - balance;
 
             throw new InsufficientFundsException(
-                    "Insufficient funds.",
-                    shortfall
+                "Insufficient funds.", shortfall
             );
         }
 
         balance -= amount;
-
-        System.out.println(
-                "Withdrawn: " + amount
-        );
+        System.out.println("Withdrawn: " + amount);
     }
 
     public void display() {
-
-        System.out.println(
-                "Account Number: " + accountNumber
-        );
-
-        System.out.println(
-                "Name: " + name
-        );
-
-        System.out.println(
-                "Balance: " + balance
-        );
+        System.out.println("Account Number: " + accountNumber);
+        System.out.println("Name: " + name);
+        System.out.println("Balance: " + balance);
     }
 }
