@@ -1,65 +1,40 @@
-import java.util.*;
-import exception.*;
+class Account {
+    int balance = 1000;
+
+    synchronized void deposit(int amount) {
+        balance += amount;
+        System.out.println("Deposited: " + amount +
+                " | Balance: " + balance);
+    }
+
+    synchronized void withdraw(int amount) {
+        if (balance >= amount) {
+            balance -= amount;
+            System.out.println("Withdrawn: " + amount +
+                    " | Balance: " + balance);
+        } else {
+            System.out.println("Insufficient balance!");
+        }
+    }
+}
 
 public class MiniBank {
 
-    private Map<String, Account> accounts =
-            new HashMap<>();
+    public static void main(String[] args) {
 
-    public void addAccount(Account account) {
+        TransactionProcessor processor = new TransactionProcessor();
+        Account account = new Account();
 
-        accounts.put(
-                account.getAccountNumber(),
-                account
-        );
+        processor.submit(() -> account.deposit(500));
+        processor.submit(() -> account.withdraw(200));
+        processor.submit(() -> account.deposit(300));
+        processor.submit(() -> account.withdraw(400));
+        processor.submit(() -> account.deposit(100));
+        processor.submit(() -> account.withdraw(150));
 
-        System.out.println(
-                "Account added successfully."
-        );
-    }
+        processor.stop();
 
-    public Account findAccount(String accountNumber)
-            throws AccountNotFoundException {
-
-        Account account = accounts.get(accountNumber);
-
-        if (account == null) {
-
-            throw new AccountNotFoundException(
-                    "Account not found: "
-                    + accountNumber
-            );
-        }
-
-        return account;
-    }
-
-    public void transfer(
-            Account from,
-            Account to,
-            long amount)
-            throws BankException {
-
-        try {
-
-            from.withdraw(amount);
-
-            to.deposit(amount);
-
-            System.out.println(
-                    "Transfer successful."
-            );
-
-        } catch (InvalidAmountException |
-                 InsufficientFundsException e) {
-
-            throw e;
-
-        } finally {
-
-            System.out.println(
-                    "Transfer operation completed."
-            );
-        }
+        System.out.println("Final Balance: " + account.balance);
+        System.out.println("All transactions completed.");
     }
 }
