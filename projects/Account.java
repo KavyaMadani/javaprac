@@ -1,8 +1,7 @@
-
 import java.io.Serializable;
 import exception.*;
 
-public class Account implements Serializable {
+public class Account implements Serializable, Comparable<Account> {
 
     private static final long serialVersionUID = 1L;
 
@@ -40,8 +39,7 @@ public class Account implements Serializable {
     }
 
     public void withdraw(long amount)
-            throws InsufficientFundsException,
-                   InvalidAmountException {
+            throws InsufficientFundsException, InvalidAmountException {
 
         if (amount <= 0) {
             throw new InvalidAmountException(
@@ -65,5 +63,17 @@ public class Account implements Serializable {
         System.out.println("Account Number: " + accountNumber);
         System.out.println("Name: " + name);
         System.out.println("Balance: " + balance);
+    }
+
+    @Override
+    public int compareTo(Account other) {
+        return this.accountNumber.compareTo(other.accountNumber);
+    }
+
+    @Override
+    public String toString() {
+        return "Account Number: " + accountNumber
+                + ", Name: " + name
+                + ", Balance: " + balance;
     }
 }

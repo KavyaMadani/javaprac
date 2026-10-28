@@ -1,154 +1,73 @@
-import exception.*;
-
 public class Main {
 
     public static void main(String[] args) {
 
-        MiniBank bank = new MiniBank();
+        AccountStore store = new AccountStore();
 
-        Account account1 =
-                new Account(
-                        "A101",
-                        "Kavya",
-                        1000
-                );
+        Account account1 = new Account("A101", "Kavya", 5000);
+        Account account2 = new Account("A102", "Rahul", 3000);
+        Account account3 = new Account("A103", "Amit", 7000);
+        Account account4 = new Account("A104", "Priya", 2000);
 
-        Account account2 =
-                new Account(
-                        "A102",
-                        "Rahul",
-                        500
-                );
+        store.add(account1);
+        store.add(account2);
+        store.add(account3);
+        store.add(account4);
 
-        bank.addAccount(account1);
-        bank.addAccount(account2);
+        System.out.println("All Accounts:");
 
-        System.out.println("\n--- Account Details ---");
-
-        account1.display();
-
-        System.out.println();
-
-        account2.display();
-
-
-        
-        System.out.println(
-                "\n--- Deposit Test ---"
-        );
-
-        try {
-
-            account1.deposit(500);
-
-            System.out.println(
-                    "New balance: "
-                    + account1.getBalance()
-            );
-
-        } catch (InvalidAmountException e) {
-
-            System.out.println(
-                    "Error: "
-                    + e.getMessage()
-            );
+        for (Account account : store.getAll()) {
+            System.out.println(account);
         }
 
+        System.out.println("\nSearch Account A102:");
 
-       
-        System.out.println(
-                "\n--- Withdrawal Test ---"
-        );
+        Account found = store.get("A102");
 
-        try {
-
-            account1.withdraw(5000);
-
-        } catch (InsufficientFundsException e) {
-
-            System.out.println(
-                    "Error: "
-                    + e.getMessage()
-            );
-
-            System.out.println(
-                    "Shortfall: "
-                    + e.getShortfall()
-            );
-
-        } catch (InvalidAmountException e) {
-
-            System.out.println(
-                    "Error: "
-                    + e.getMessage()
-            );
+        if (found != null) {
+            System.out.println(found);
+        } else {
+            System.out.println("Account not found");
         }
 
+        System.out.println("\nAccounts Sorted by Balance:");
 
-    
-
-        System.out.println(
-                "\n--- Transfer Test ---"
-        );
-
-        try {
-
-            bank.transfer(
-                    account1,
-                    account2,
-                    300
-            );
-
-        } catch (BankException e) {
-
-            System.out.println(
-                    "Transfer failed: "
-                    + e.getMessage()
-            );
+        for (Account account : store.sortedByBalance()) {
+            System.out.println(account);
         }
 
+        System.out.println("\nAccounts Above Balance 3000:");
 
-      
-
-        System.out.println(
-                "\n--- Account Search Test ---"
-        );
-
-        try {
-
-            bank.findAccount("A999");
-
-        } catch (AccountNotFoundException e) {
-
-            System.out.println(
-                    "Error: "
-                    + e.getMessage()
-            );
+        for (Account account : store.getAccountsAboveBalance(3000)) {
+            System.out.println(account);
         }
 
+        System.out.println("\nAccounts Sorted by Account Number:");
 
-       
+        for (Account account :
+                store.getAccountsSortedByNumber().values()) {
+            System.out.println(account);
+        }
+
+        System.out.println("\nTransaction History:");
+
+        for (String transaction : store.getTransactionHistory()) {
+            System.out.println(transaction);
+        }
+
+        System.out.println("\nConcurrentHashMap Test:");
+
+        TransactionProcessor processor = new TransactionProcessor();
+
+        processor.addAccount(account1);
+        processor.addAccount(account2);
+        processor.addAccount(account3);
+        processor.addAccount(account4);
+
         System.out.println(
-                "\n--- Try With Resources ---"
+            processor.getAccount("A101")
         );
 
-        try (BankResource resource =
-                     new BankResource()) {
-
-            resource.process();
-
-        } catch (Exception e) {
-
-            System.out.println(
-                    "Error: "
-                    + e.getMessage()
-            );
-
-        } finally {
-
-            System.out.println(
-                    "Bank operation finished."
-            );
-        }
+        processor.stop();
     }
 }

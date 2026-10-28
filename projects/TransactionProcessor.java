@@ -1,21 +1,38 @@
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-class TransactionProcessor {
+public class TransactionProcessor {
 
-    ExecutorService pool = Executors.newFixedThreadPool(4);
+    private final ExecutorService pool =
+            Executors.newFixedThreadPool(4);
 
-    void submit(Runnable task) {
+    private final ConcurrentHashMap<String, Account> accounts =
+            new ConcurrentHashMap<>();
+
+    public void addAccount(Account account) {
+        accounts.put(account.getAccountNumber(), account);
+    }
+
+    public Account getAccount(String accountNumber) {
+        return accounts.get(accountNumber);
+    }
+
+    public ConcurrentHashMap<String, Account> getAccounts() {
+        return accounts;
+    }
+
+    public void submit(Runnable task) {
         pool.execute(task);
     }
 
-    void stop() {
+    public void stop() {
         pool.shutdown();
 
         try {
-            pool.awaitTermination(1, TimeUnit.MINUTES);
+            if (!pool.awaitTermination(1, TimeUnit.MINUTES)) {
+                pool.shutdownNow();
+            }
         } catch (InterruptedException e) {
+            pool.shutdownNow();
             Thread.currentThread().interrupt();
         }
     }
